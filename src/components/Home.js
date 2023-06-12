@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from "axios";
 
 export default function Home() {
+
     const [users, setUsers] = useState([]);
 
     useEffect(()=>{
         loadUsers();
-    }, []);
+    }, [users]);
 
     const loadUsers = async() => {
         const info = await axios.get("https://fullstack-backend-production-1a68.up.railway.app/user");
@@ -14,7 +15,15 @@ export default function Home() {
         setUsers(info.data);
     };
 
-    const updateUser = async() => {}
+    const handleDelete = async(id) => {
+        try {
+            await axios.delete(`https://fullstack-backend-production-1a68.up.railway.app/user/${id}`);
+        } catch (error) {
+            alert("Unable to process this request at the moment");
+            console.log(error);
+        }
+        
+    }
 
     return (
         <div className="container">
@@ -39,7 +48,7 @@ export default function Home() {
                                 <td>{user.email}</td>
                                 <td>
                                     <button type="button" className="btn btn-outline-secondary mx-2">Edit</button>
-                                    <button type="button" className="btn btn-outline-danger mx-2">Delete</button>
+                                    <button type="button" className="btn btn-outline-danger mx-2" onClick={() => handleDelete(user.id)}>Delete</button>
                                 </td>
                                 </tr>
                             ))
